@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="Amazon Offers, Amazon Deals of the day, Amazon Hot Deals, Amazon Shopping Offers, Amazon Today's Offers, Prime offers"><meta name="description" content="Today's Amazon Deals of The Day. Save Money with Amazon Prime Exclusive Deals, and Amazon Pay Offers. Get the Latest Amazon Offers on Mobile Phones, Laptops, Fashion, Recharge, Electronics & Accessories on Dealsmagnet. ">
+<meta content="Today's Amazon Deals of The Day. Save Money with Amazon Prime Exclusive Deals, and Amazon Pay Offers. Get the Latest Amazon Offers on Mobile Phones, Laptops, Fashion, Recharge, Electronics & Accessories on Dealsmagnet. ">
+    <title>Amazon Best Offers</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .product-card {
+            margin-bottom: 20px;
+        }
+
+        .card {
+            width: 350px; /* Set the card width */
+            height: 400px; /* Set the card height */
+        }
+
+        .card-img-top {
+            width: 100%; /* Make the image fill the card width */
+            height: 60%; /* Set the image height */
+            object-fit: cover; /* Maintain aspect ratio and cover the entire container */
+        }
+      .loading-spinner {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #007bff;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+<div class="row">
+<div class="col-12 pt-2 pl-2 pr-2">
+<center><h1 class="h3">Today Best Amazon Offers</h1></center>
+<p>Amazon is India's biggest online marketplace for Electronics, Mobiles, groceries, Appliances &amp; More. Here on the Dealsmagnet Amazon Offer Page, you can get the best deals and offers on Amazon.&nbsp;</p>
+<p>For Instant Deals Alert of Amazon Offers, you can Join Our&nbsp;<a class="p-1 m-1 bg-success text-white font-weight-bold shadow rounded d-inline-block text-center" href="https://whatsapp.com/channel/0029VaETlyVLNSaE3KlYGp3b">Whatsapp Group</a> &amp; Or Join our <a class="p-1 m-1 bg-primary text-white font-weight-bold shadow rounded d-inline-block text-center" href="https://telegram.dog/getnonstopdeal">Telegram Channel</a> for faster updates of deals on Amazon.&nbsp;</p> </div>
+</div>
+</div>
+<div class="container mt-5">
+    <div class="text-center mb-3" id="loading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <p>Loading...</p>
+    </div>
+    <div class="row" id="gallery">
+      <!-- Gallery items will be dynamically added here -->
+    </div>
+    <div class="text-center mt-3">
+      <button type="button" class="btn btn-primary mr-2" id="prevBtn">Previous</button>
+      <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
+      <button type="button" class="btn btn-primary" id="shareBtn">Share</button>
+    </div>
+  </div>
+
+<!-- Bootstrap JS (optional, only required if you're using Bootstrap JS features) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    var currentPage = 0;
+    var itemsPerPage = 6;
+    var totalItems = 0;
+    var data = [];
+
+    function showItems(page) {
+      var start = page * itemsPerPage;
+      var end = start + itemsPerPage;
+      var slicedData = data.slice(start, end);
+
+      var galleryHtml = '';
+      slicedData.forEach(product => {
+        var galleryItem = `
+          <div class="col-md-4">
+            <div class="card mb-4 box-shadow">
+              <img class="card-img-top" src="${product.image}" alt="Product Image">
+              <div class="card-body">
+                <h5 class="card-title">${product.product}</h5>
+                <a href="${product.link}" class="btn btn-primary">View Product</a>
+                <button type="button" class="btn btn-primary share-btn" data-product="${encodeURIComponent(product.product)}" data-link="${encodeURIComponent(product.link)}" data-image="${encodeURIComponent(product.image)}">Share</button>
+              </div>
+            </div>
+          </div>
+        `;
+        galleryHtml += galleryItem;
+      });
+      document.getElementById('gallery').innerHTML = galleryHtml;
+    }
+
+    // Show loading animation
+    document.getElementById('loading').style.display = 'block';
+
+    // Fetch JSON data
+    fetch('Enter-your-webAppscript-Ur-Here')
+      .then(response => response.json())
+      .then(responseData => {
+        data = responseData;
+        totalItems = data.length;
+        showItems(currentPage);
+        document.getElementById('loading').style.display = 'none';
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+
+    document.getElementById('prevBtn').addEventListener('click', function() {
+      currentPage = Math.max(0, currentPage - 1);
+      showItems(currentPage);
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', function() {
+      currentPage = Math.min(Math.ceil(totalItems / itemsPerPage) - 1, currentPage + 1);
+      showItems(currentPage);
+    });
+
+    document.addEventListener('click', function(event) {
+      if (event.target && event.target.classList.contains('share-btn')) {
+        var productName = decodeURIComponent(event.target.getAttribute('data-product'));
+        var productLink = decodeURIComponent(event.target.getAttribute('data-link'));
+        var productImage = decodeURIComponent(event.target.getAttribute('data-image'));
+
+        if (navigator.share) {
+          navigator.share({
+            title: productName,
+            text: 'Check out this product!',
+            url: productLink,
+          }).then(() => {
+            console.log('Product shared successfully');
+          }).catch((error) => {
+            console.error('Error sharing product:', error);
+          });
+        } else {
+          console.log('Web Share API not supported');
+          // Handle fallback option here (e.g., display a message)
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
